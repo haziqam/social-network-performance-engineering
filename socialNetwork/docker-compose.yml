@@ -49,7 +49,9 @@ services:
       - JAEGER_AGENT_PORT=6831
 
   compose-post-service:
-    image: deathstarbench/social-network-microservices:latest
+    # image: deathstarbench/social-network-microservices:latest
+    build:
+      dockerfile: Dockerfile
     hostname: compose-post-service
     ports:
       - 10001:9090
@@ -326,7 +328,7 @@ services:
     depends_on:
       jaeger-agent:
         condition: service_started
-    restart: always
+    # restart: always
     volumes:
       - ./nginx-web-server/lua-scripts:/usr/local/openresty/nginx/lua-scripts
       - ./nginx-web-server/pages:/usr/local/openresty/nginx/pages

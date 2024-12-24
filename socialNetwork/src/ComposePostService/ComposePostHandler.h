@@ -391,8 +391,7 @@ void ComposePostHandler::ComposePost(const int64_t req_id, const std::string &us
     auto timestamp = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
     post.timestamp = timestamp;
 
-    // try
-    // {
+
     post.post_id = unique_id_future.get();
     post.creator = creator_future.get();
     post.media = media_future.get();
@@ -402,11 +401,7 @@ void ComposePostHandler::ComposePost(const int64_t req_id, const std::string &us
     post.user_mentions = text_return.user_mentions;
     post.req_id = req_id;
     post.post_type = post_type;
-    // }
-    // catch (...)
-    // {
-    //   throw;
-    // }
+
 
     std::vector<int64_t> user_mention_ids;
     for (auto &item : post.user_mentions)
@@ -414,28 +409,18 @@ void ComposePostHandler::ComposePost(const int64_t req_id, const std::string &us
         user_mention_ids.emplace_back(item.user_id);
     }
 
-    // In mixed workloed condition, need to make sure _UploadPostHelper execute
-    // Before _UploadUserTimelineHelper and _UploadHomeTimelineHelper.
-    // Change _UploadUserTimelineHelper and _UploadHomeTimelineHelper to deferred.
-    // To let them start execute after post_future.get() return.
     auto post_future =
         std::async(std::launch::async, &ComposePostHandler::_UploadPostHelper, this, req_id, post, writer_text_map);
 
     auto user_timeline_future = std::async(std::launch::deferred, &ComposePostHandler::_UploadUserTimelineHelper, this,
                                            req_id, post.post_id, user_id, timestamp, writer_text_map);
-    auto home_timeline_future = std::async(std::launch::deferred, &ComposePostHandler::_UploadHomeTimelineHelper, this,
+
+    post_future.get();
+    user_timeline_future.get();
+
+    auto home_timeline_future = std::async(std::launch::async, &ComposePostHandler::_UploadHomeTimelineHelper, this,
                                            req_id, post.post_id, user_id, timestamp, user_mention_ids, writer_text_map);
 
-    // try
-    // {
-    post_future.get();
-    home_timeline_future.get();
-    user_timeline_future.get();
-    // }
-    // catch (...)
-    // {
-    //   throw;
-    // }
     span->Finish();
 }
 
