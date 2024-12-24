@@ -1,7 +1,10 @@
 version: "3.9"
 services:
   social-graph-service:
-    image: deathstarbench/social-network-microservices:latest
+    # image: deathstarbench/social-network-microservices:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     hostname: social-graph-service
     ports:
       - 10000:9090

@@ -31,20 +31,25 @@ function _M.Follow()
       SocialGraphServiceClient, "social-graph-service" .. k8s_suffix, 9090)
 
   -- -- new start --
-  -- if (_StrIsEmpty(ngx.var.cookie_login_token)) then
-  --   ngx.status = ngx.HTTP_UNAUTHORIZED
-  --   ngx.exit(ngx.HTTP_OK)
-  -- end
+  if (_StrIsEmpty(ngx.var.cookie_login_token)) then
+    ngx.status = ngx.HTTP_UNAUTHORIZED
+    ngx.exit(ngx.HTTP_OK)
+  end
 
-  -- local login_obj = jwt:verify(ngx.shared.config:get("secret"), ngx.var.cookie_login_token)
-  -- if not login_obj["verified"] then
-  --   ngx.status = ngx.HTTP_UNAUTHORIZED
-  --   ngx.say(login_obj.reason);
-  --   ngx.exit(ngx.HTTP_OK)
-  -- end
-  -- -- get user id/name from login obj
-  -- local user_id = tonumber(login_obj["payload"]["user_id"])
-  -- local username = login_obj["payload"]["username"]
+  local login_obj = jwt:verify(ngx.shared.config:get("secret"), ngx.var.cookie_login_token)
+  if not login_obj["verified"] then
+    ngx.status = ngx.HTTP_UNAUTHORIZED
+    ngx.say(login_obj.reason);
+    ngx.exit(ngx.HTTP_OK)
+  end
+
+
+  -- get user id/name from login obj
+  local user_id = login_obj["payload"]["user_id"]
+  local username = login_obj["payload"]["username"]
+
+  ngx.log(ngx.ERR, "Extracted user_id in string: ", user_id)
+  -- ngx.log(ngx.ERR, "Extracted user_id in number: ", user_id)
 
   -- -- new end --
 
@@ -54,9 +59,13 @@ function _M.Follow()
   if (not _StrIsEmpty(post.user_id) and not _StrIsEmpty(post.followee_id)) then
     status, err = pcall(client.Follow, client,req_id,
         tonumber(post.user_id), tonumber(post.followee_id), carrier )
+    -- ngx.log(ngx.ERR, "User ", post.user_name,
+    --     " is following ", post.followee_name, ".")
   elseif (not _StrIsEmpty(post.user_name) and not _StrIsEmpty(post.followee_name)) then
     status, err = pcall(client.FollowWithUsername, client,req_id,
-        post.user_name, post.followee_name, carrier)
+        post.user_name, post.followee_name, carrier, user_id)
+    -- ngx.log(ngx.ERR, "User ", post.user_name, " (ID: ", user_id, 
+    --     ") is following ", post.followee_name, ".")
   else
     ngx.status = ngx.HTTP_BAD_REQUEST
     ngx.say("Incomplete arguments")

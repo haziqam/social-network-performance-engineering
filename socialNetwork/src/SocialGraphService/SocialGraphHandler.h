@@ -46,10 +46,10 @@ class SocialGraphHandler : public SocialGraphServiceIf {
   void Unfollow(int64_t, int64_t, int64_t,
                 const std::map<std::string, std::string> &) override;
   void FollowWithUsername(int64_t, const std::string &, const std::string &,
-                          const std::map<std::string, std::string> &) override;
+                          const std::map<std::string, std::string> &, const std::string &) override;
   void UnfollowWithUsername(
       int64_t, const std::string &, const std::string &,
-      const std::map<std::string, std::string> &) override;
+      const std::map<std::string, std::string> &, const std::string &) override;
   void InsertUser(int64_t, int64_t,
                   const std::map<std::string, std::string> &) override;
 
@@ -824,7 +824,8 @@ void SocialGraphHandler::InsertUser(
 void SocialGraphHandler::FollowWithUsername(
     int64_t req_id, const std::string &user_name,
     const std::string &followee_name,
-    const std::map<std::string, std::string> &carrier) {
+    const std::map<std::string, std::string> &carrier,
+    const std::string &user_id) {
   // Initialize a span
   TextMapReader reader(carrier);
   std::map<std::string, std::string> writer_text_map;
@@ -835,7 +836,7 @@ void SocialGraphHandler::FollowWithUsername(
       {opentracing::ChildOf(parent_span->get())});
   opentracing::Tracer::Global()->Inject(span->context(), writer);
 
-  std::future<int64_t> user_id_future = std::async(std::launch::async, [&]() {
+  std::future<int64_t> user_id_future = std::async(std::launch::deferred, [&]() {
     auto user_client_wrapper = _user_service_client_pool->Pop();
     if (!user_client_wrapper) {
       ServiceException se;
@@ -879,18 +880,23 @@ void SocialGraphHandler::FollowWithUsername(
         return _return;
       });
 
-  int64_t user_id;
+  // int64_t user_id;
+  std::cout << "user_id = " << user_id << std::endl;
+  int64_t _user_id = std::stoll(user_id);
+  std::cout << "Converted user_id = " << _user_id << std::endl;
   int64_t followee_id;
   try {
-    user_id = user_id_future.get();
+    if (_user_id <= 0) {
+      _user_id = user_id_future.get();
+    }
     followee_id = followee_id_future.get();
   } catch (const std::exception &e) {
     LOG(warning) << e.what();
     throw;
   }
 
-  if (user_id >= 0 && followee_id >= 0) {
-    Follow(req_id, user_id, followee_id, writer_text_map);
+  if (_user_id >= 0 && followee_id >= 0) {
+    Follow(req_id, _user_id, followee_id, writer_text_map);
   }
   span->Finish();
 }
@@ -898,7 +904,8 @@ void SocialGraphHandler::FollowWithUsername(
 void SocialGraphHandler::UnfollowWithUsername(
     int64_t req_id, const std::string &user_name,
     const std::string &followee_name,
-    const std::map<std::string, std::string> &carrier) {
+    const std::map<std::string, std::string> &carrier,
+    const std::string &user_id) {
   // Initialize a span
   TextMapReader reader(carrier);
   std::map<std::string, std::string> writer_text_map;
@@ -909,7 +916,7 @@ void SocialGraphHandler::UnfollowWithUsername(
       {opentracing::ChildOf(parent_span->get())});
   opentracing::Tracer::Global()->Inject(span->context(), writer);
 
-  std::future<int64_t> user_id_future = std::async(std::launch::async, [&]() {
+  std::future<int64_t> user_id_future = std::async(std::launch::deferred, [&]() {
     auto user_client_wrapper = _user_service_client_pool->Pop();
     if (!user_client_wrapper) {
       ServiceException se;
@@ -953,18 +960,21 @@ void SocialGraphHandler::UnfollowWithUsername(
         return _return;
       });
 
-  int64_t user_id;
+  // int64_t user_id;
+  int64_t _user_id = std::stoll(user_id);
   int64_t followee_id;
   try {
-    user_id = user_id_future.get();
+    if (_user_id <= 0) {
+      _user_id = user_id_future.get();
+    }
     followee_id = followee_id_future.get();
   } catch (...) {
     throw;
   }
 
-  if (user_id >= 0 && followee_id >= 0) {
+  if (_user_id >= 0 && followee_id >= 0) {
     try {
-      Unfollow(req_id, user_id, followee_id, writer_text_map);
+      Unfollow(req_id, _user_id, followee_id, writer_text_map);
     } catch (...) {
       throw;
     }
