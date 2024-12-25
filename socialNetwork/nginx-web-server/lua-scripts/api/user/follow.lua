@@ -13,6 +13,7 @@ function _M.Follow()
   local ngx = ngx
   local GenericObjectPool = require "GenericObjectPool"
   local SocialGraphServiceClient = require "social_network_SocialGraphService".SocialGraphServiceClient
+  local UserServiceClient = require "social_network_UserService".UserServiceClient
   local jwt = require "resty.jwt"
 
   local req_id = tonumber(string.sub(ngx.var.request_id, 0, 15), 16)
@@ -29,7 +30,8 @@ function _M.Follow()
 
   local client = GenericObjectPool:connection(
       SocialGraphServiceClient, "social-graph-service" .. k8s_suffix, 9090)
-
+  local userServiceClient = GenericObjectPool:connection(
+    UserServiceClient, "user-service" .. k8s_suffix, 9090)
   -- -- new start --
   if (_StrIsEmpty(ngx.var.cookie_login_token)) then
     ngx.status = ngx.HTTP_UNAUTHORIZED
@@ -58,14 +60,27 @@ function _M.Follow()
   local err
   if (not _StrIsEmpty(post.user_id) and not _StrIsEmpty(post.followee_id)) then
     status, err = pcall(client.Follow, client,req_id,
-        tonumber(post.user_id), tonumber(post.followee_id), carrier )
-    -- ngx.log(ngx.ERR, "User ", post.user_name,
-    --     " is following ", post.followee_name, ".")
+      tonumber(post.user_id), tonumber(post.followee_id), carrier )
   elseif (not _StrIsEmpty(post.user_name) and not _StrIsEmpty(post.followee_name)) then
-    status, err = pcall(client.FollowWithUsername, client,req_id,
-        post.user_name, post.followee_name, carrier, user_id)
-    -- ngx.log(ngx.ERR, "User ", post.user_name, " (ID: ", user_id, 
-    --     ") is following ", post.followee_name, ".")
+    -- first
+    -- status, err = pcall(client.FollowWithUsername, client,req_id,
+    --     post.user_name, post.followee_name, carrier)
+
+    -- second
+    status, result_or_error = pcall(userServiceClient.GetUserId, userServiceClient, req_id, post.followee_name, carrier)
+    ngx.log(ngx.ERR, "Type of result_or_error: ", type(result_or_error))
+    if status then
+      local followee_id = result_or_error
+      ngx.log(ngx.ERR, "followee_id: ", tostring(followee_id))
+
+      status, err = pcall(client.Follow, client,req_id,
+        tonumber(user_id), followee_id, carrier)
+      ngx.log(ngx.ERR, "Follow Status: ", status)
+    else
+        ngx.log(ngx.ERR, "Error getting followee_id, fallback to using followee name")
+        status, err = pcall(client.FollowWithUsername, client,req_id,
+        post.user_name, post.followee_name, carrier)
+    end
   else
     ngx.status = ngx.HTTP_BAD_REQUEST
     ngx.say("Incomplete arguments")
@@ -75,8 +90,8 @@ function _M.Follow()
 
   if not status then
     ngx.status = ngx.HTTP_INTERNAL_SERVER_ERROR
-    ngx.say("Follow Failed: " .. err.message)
-    ngx.log(ngx.ERR, "Follow Failed: " .. err.message)
+    ngx.say("Follow Failed: ")
+    ngx.log(ngx.ERR, "Follow Failed: ")
     ngx.exit(ngx.HTTP_INTERNAL_SERVER_ERROR)
   end
 

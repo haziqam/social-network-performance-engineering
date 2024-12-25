@@ -237,7 +237,6 @@ service SocialGraphService{
       2: string user_usernmae,
       3: string followee_username,
       4: map<string, string> carrier,
-      5: string user_id
   ) throws (1: ServiceException se)
 
   void UnfollowWithUsername(
@@ -245,7 +244,6 @@ service SocialGraphService{
       2: string user_usernmae,
       3: string followee_username,
       4: map<string, string> carrier,
-      5: string user_id
   ) throws (1: ServiceException se)
 
   void InsertUser(
