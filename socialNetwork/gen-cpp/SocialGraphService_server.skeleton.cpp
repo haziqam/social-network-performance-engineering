@@ -40,12 +40,12 @@ class SocialGraphServiceHandler : virtual public SocialGraphServiceIf {
     printf("Unfollow\n");
   }
 
-  void FollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier, const std::string& user_id) {
+  void FollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier) {
     // Your implementation goes here
     printf("FollowWithUsername\n");
   }
 
-  void UnfollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier, const std::string& user_id) {
+  void UnfollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier) {
     // Your implementation goes here
     printf("UnfollowWithUsername\n");
   }

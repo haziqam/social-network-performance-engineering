@@ -26,8 +26,8 @@ class SocialGraphServiceIf {
   virtual void GetFollowees(std::vector<int64_t> & _return, const int64_t req_id, const int64_t user_id, const std::map<std::string, std::string> & carrier) = 0;
   virtual void Follow(const int64_t req_id, const int64_t user_id, const int64_t followee_id, const std::map<std::string, std::string> & carrier) = 0;
   virtual void Unfollow(const int64_t req_id, const int64_t user_id, const int64_t followee_id, const std::map<std::string, std::string> & carrier) = 0;
-  virtual void FollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier, const std::string& user_id) = 0;
-  virtual void UnfollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier, const std::string& user_id) = 0;
+  virtual void FollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier) = 0;
+  virtual void UnfollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier) = 0;
   virtual void InsertUser(const int64_t req_id, const int64_t user_id, const std::map<std::string, std::string> & carrier) = 0;
 };
 
@@ -70,10 +70,10 @@ class SocialGraphServiceNull : virtual public SocialGraphServiceIf {
   void Unfollow(const int64_t /* req_id */, const int64_t /* user_id */, const int64_t /* followee_id */, const std::map<std::string, std::string> & /* carrier */) override {
     return;
   }
-  void FollowWithUsername(const int64_t /* req_id */, const std::string& /* user_usernmae */, const std::string& /* followee_username */, const std::map<std::string, std::string> & /* carrier */, const std::string& /* user_id */) override {
+  void FollowWithUsername(const int64_t /* req_id */, const std::string& /* user_usernmae */, const std::string& /* followee_username */, const std::map<std::string, std::string> & /* carrier */) override {
     return;
   }
-  void UnfollowWithUsername(const int64_t /* req_id */, const std::string& /* user_usernmae */, const std::string& /* followee_username */, const std::map<std::string, std::string> & /* carrier */, const std::string& /* user_id */) override {
+  void UnfollowWithUsername(const int64_t /* req_id */, const std::string& /* user_usernmae */, const std::string& /* followee_username */, const std::map<std::string, std::string> & /* carrier */) override {
     return;
   }
   void InsertUser(const int64_t /* req_id */, const int64_t /* user_id */, const std::map<std::string, std::string> & /* carrier */) override {
@@ -594,12 +594,11 @@ class SocialGraphService_Unfollow_presult {
 };
 
 typedef struct _SocialGraphService_FollowWithUsername_args__isset {
-  _SocialGraphService_FollowWithUsername_args__isset() : req_id(false), user_usernmae(false), followee_username(false), carrier(false), user_id(false) {}
+  _SocialGraphService_FollowWithUsername_args__isset() : req_id(false), user_usernmae(false), followee_username(false), carrier(false) {}
   bool req_id :1;
   bool user_usernmae :1;
   bool followee_username :1;
   bool carrier :1;
-  bool user_id :1;
 } _SocialGraphService_FollowWithUsername_args__isset;
 
 class SocialGraphService_FollowWithUsername_args {
@@ -610,8 +609,7 @@ class SocialGraphService_FollowWithUsername_args {
   SocialGraphService_FollowWithUsername_args() noexcept
                                              : req_id(0),
                                                user_usernmae(),
-                                               followee_username(),
-                                               user_id() {
+                                               followee_username() {
   }
 
   virtual ~SocialGraphService_FollowWithUsername_args() noexcept;
@@ -619,7 +617,6 @@ class SocialGraphService_FollowWithUsername_args {
   std::string user_usernmae;
   std::string followee_username;
   std::map<std::string, std::string>  carrier;
-  std::string user_id;
 
   _SocialGraphService_FollowWithUsername_args__isset __isset;
 
@@ -631,8 +628,6 @@ class SocialGraphService_FollowWithUsername_args {
 
   void __set_carrier(const std::map<std::string, std::string> & val);
 
-  void __set_user_id(const std::string& val);
-
   bool operator == (const SocialGraphService_FollowWithUsername_args & rhs) const
   {
     if (!(req_id == rhs.req_id))
@@ -642,8 +637,6 @@ class SocialGraphService_FollowWithUsername_args {
     if (!(followee_username == rhs.followee_username))
       return false;
     if (!(carrier == rhs.carrier))
-      return false;
-    if (!(user_id == rhs.user_id))
       return false;
     return true;
   }
@@ -668,7 +661,6 @@ class SocialGraphService_FollowWithUsername_pargs {
   const std::string* user_usernmae;
   const std::string* followee_username;
   const std::map<std::string, std::string> * carrier;
-  const std::string* user_id;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
@@ -730,12 +722,11 @@ class SocialGraphService_FollowWithUsername_presult {
 };
 
 typedef struct _SocialGraphService_UnfollowWithUsername_args__isset {
-  _SocialGraphService_UnfollowWithUsername_args__isset() : req_id(false), user_usernmae(false), followee_username(false), carrier(false), user_id(false) {}
+  _SocialGraphService_UnfollowWithUsername_args__isset() : req_id(false), user_usernmae(false), followee_username(false), carrier(false) {}
   bool req_id :1;
   bool user_usernmae :1;
   bool followee_username :1;
   bool carrier :1;
-  bool user_id :1;
 } _SocialGraphService_UnfollowWithUsername_args__isset;
 
 class SocialGraphService_UnfollowWithUsername_args {
@@ -746,8 +737,7 @@ class SocialGraphService_UnfollowWithUsername_args {
   SocialGraphService_UnfollowWithUsername_args() noexcept
                                                : req_id(0),
                                                  user_usernmae(),
-                                                 followee_username(),
-                                                 user_id() {
+                                                 followee_username() {
   }
 
   virtual ~SocialGraphService_UnfollowWithUsername_args() noexcept;
@@ -755,7 +745,6 @@ class SocialGraphService_UnfollowWithUsername_args {
   std::string user_usernmae;
   std::string followee_username;
   std::map<std::string, std::string>  carrier;
-  std::string user_id;
 
   _SocialGraphService_UnfollowWithUsername_args__isset __isset;
 
@@ -767,8 +756,6 @@ class SocialGraphService_UnfollowWithUsername_args {
 
   void __set_carrier(const std::map<std::string, std::string> & val);
 
-  void __set_user_id(const std::string& val);
-
   bool operator == (const SocialGraphService_UnfollowWithUsername_args & rhs) const
   {
     if (!(req_id == rhs.req_id))
@@ -778,8 +765,6 @@ class SocialGraphService_UnfollowWithUsername_args {
     if (!(followee_username == rhs.followee_username))
       return false;
     if (!(carrier == rhs.carrier))
-      return false;
-    if (!(user_id == rhs.user_id))
       return false;
     return true;
   }
@@ -804,7 +789,6 @@ class SocialGraphService_UnfollowWithUsername_pargs {
   const std::string* user_usernmae;
   const std::string* followee_username;
   const std::map<std::string, std::string> * carrier;
-  const std::string* user_id;
 
   uint32_t write(::apache::thrift::protocol::TProtocol* oprot) const;
 
@@ -1022,11 +1006,11 @@ class SocialGraphServiceClient : virtual public SocialGraphServiceIf {
   void Unfollow(const int64_t req_id, const int64_t user_id, const int64_t followee_id, const std::map<std::string, std::string> & carrier) override;
   void send_Unfollow(const int64_t req_id, const int64_t user_id, const int64_t followee_id, const std::map<std::string, std::string> & carrier);
   void recv_Unfollow();
-  void FollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier, const std::string& user_id) override;
-  void send_FollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier, const std::string& user_id);
+  void FollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier) override;
+  void send_FollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier);
   void recv_FollowWithUsername();
-  void UnfollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier, const std::string& user_id) override;
-  void send_UnfollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier, const std::string& user_id);
+  void UnfollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier) override;
+  void send_UnfollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier);
   void recv_UnfollowWithUsername();
   void InsertUser(const int64_t req_id, const int64_t user_id, const std::map<std::string, std::string> & carrier) override;
   void send_InsertUser(const int64_t req_id, const int64_t user_id, const std::map<std::string, std::string> & carrier);
@@ -1129,22 +1113,22 @@ class SocialGraphServiceMultiface : virtual public SocialGraphServiceIf {
     ifaces_[i]->Unfollow(req_id, user_id, followee_id, carrier);
   }
 
-  void FollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier, const std::string& user_id) override {
+  void FollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier) override {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->FollowWithUsername(req_id, user_usernmae, followee_username, carrier, user_id);
+      ifaces_[i]->FollowWithUsername(req_id, user_usernmae, followee_username, carrier);
     }
-    ifaces_[i]->FollowWithUsername(req_id, user_usernmae, followee_username, carrier, user_id);
+    ifaces_[i]->FollowWithUsername(req_id, user_usernmae, followee_username, carrier);
   }
 
-  void UnfollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier, const std::string& user_id) override {
+  void UnfollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier) override {
     size_t sz = ifaces_.size();
     size_t i = 0;
     for (; i < (sz - 1); ++i) {
-      ifaces_[i]->UnfollowWithUsername(req_id, user_usernmae, followee_username, carrier, user_id);
+      ifaces_[i]->UnfollowWithUsername(req_id, user_usernmae, followee_username, carrier);
     }
-    ifaces_[i]->UnfollowWithUsername(req_id, user_usernmae, followee_username, carrier, user_id);
+    ifaces_[i]->UnfollowWithUsername(req_id, user_usernmae, followee_username, carrier);
   }
 
   void InsertUser(const int64_t req_id, const int64_t user_id, const std::map<std::string, std::string> & carrier) override {
@@ -1200,11 +1184,11 @@ class SocialGraphServiceConcurrentClient : virtual public SocialGraphServiceIf {
   void Unfollow(const int64_t req_id, const int64_t user_id, const int64_t followee_id, const std::map<std::string, std::string> & carrier) override;
   int32_t send_Unfollow(const int64_t req_id, const int64_t user_id, const int64_t followee_id, const std::map<std::string, std::string> & carrier);
   void recv_Unfollow(const int32_t seqid);
-  void FollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier, const std::string& user_id) override;
-  int32_t send_FollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier, const std::string& user_id);
+  void FollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier) override;
+  int32_t send_FollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier);
   void recv_FollowWithUsername(const int32_t seqid);
-  void UnfollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier, const std::string& user_id) override;
-  int32_t send_UnfollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier, const std::string& user_id);
+  void UnfollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier) override;
+  int32_t send_UnfollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier);
   void recv_UnfollowWithUsername(const int32_t seqid);
   void InsertUser(const int64_t req_id, const int64_t user_id, const std::map<std::string, std::string> & carrier) override;
   int32_t send_InsertUser(const int64_t req_id, const int64_t user_id, const std::map<std::string, std::string> & carrier);

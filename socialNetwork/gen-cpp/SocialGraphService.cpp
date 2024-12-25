@@ -1225,14 +1225,6 @@ uint32_t SocialGraphService_FollowWithUsername_args::read(::apache::thrift::prot
           xfer += iprot->skip(ftype);
         }
         break;
-      case 5:
-        if (ftype == ::apache::thrift::protocol::T_STRING) {
-          xfer += iprot->readString(this->user_id);
-          this->__isset.user_id = true;
-        } else {
-          xfer += iprot->skip(ftype);
-        }
-        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -1275,10 +1267,6 @@ uint32_t SocialGraphService_FollowWithUsername_args::write(::apache::thrift::pro
   }
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("user_id", ::apache::thrift::protocol::T_STRING, 5);
-  xfer += oprot->writeString(this->user_id);
-  xfer += oprot->writeFieldEnd();
-
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -1317,10 +1305,6 @@ uint32_t SocialGraphService_FollowWithUsername_pargs::write(::apache::thrift::pr
     }
     xfer += oprot->writeMapEnd();
   }
-  xfer += oprot->writeFieldEnd();
-
-  xfer += oprot->writeFieldBegin("user_id", ::apache::thrift::protocol::T_STRING, 5);
-  xfer += oprot->writeString((*(this->user_id)));
   xfer += oprot->writeFieldEnd();
 
   xfer += oprot->writeFieldStop();
@@ -1509,14 +1493,6 @@ uint32_t SocialGraphService_UnfollowWithUsername_args::read(::apache::thrift::pr
           xfer += iprot->skip(ftype);
         }
         break;
-      case 5:
-        if (ftype == ::apache::thrift::protocol::T_STRING) {
-          xfer += iprot->readString(this->user_id);
-          this->__isset.user_id = true;
-        } else {
-          xfer += iprot->skip(ftype);
-        }
-        break;
       default:
         xfer += iprot->skip(ftype);
         break;
@@ -1559,10 +1535,6 @@ uint32_t SocialGraphService_UnfollowWithUsername_args::write(::apache::thrift::p
   }
   xfer += oprot->writeFieldEnd();
 
-  xfer += oprot->writeFieldBegin("user_id", ::apache::thrift::protocol::T_STRING, 5);
-  xfer += oprot->writeString(this->user_id);
-  xfer += oprot->writeFieldEnd();
-
   xfer += oprot->writeFieldStop();
   xfer += oprot->writeStructEnd();
   return xfer;
@@ -1601,10 +1573,6 @@ uint32_t SocialGraphService_UnfollowWithUsername_pargs::write(::apache::thrift::
     }
     xfer += oprot->writeMapEnd();
   }
-  xfer += oprot->writeFieldEnd();
-
-  xfer += oprot->writeFieldBegin("user_id", ::apache::thrift::protocol::T_STRING, 5);
-  xfer += oprot->writeString((*(this->user_id)));
   xfer += oprot->writeFieldEnd();
 
   xfer += oprot->writeFieldStop();
@@ -2216,13 +2184,13 @@ void SocialGraphServiceClient::recv_Unfollow()
   return;
 }
 
-void SocialGraphServiceClient::FollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier, const std::string& user_id)
+void SocialGraphServiceClient::FollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier)
 {
-  send_FollowWithUsername(req_id, user_usernmae, followee_username, carrier, user_id);
+  send_FollowWithUsername(req_id, user_usernmae, followee_username, carrier);
   recv_FollowWithUsername();
 }
 
-void SocialGraphServiceClient::send_FollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier, const std::string& user_id)
+void SocialGraphServiceClient::send_FollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier)
 {
   int32_t cseqid = 0;
   oprot_->writeMessageBegin("FollowWithUsername", ::apache::thrift::protocol::T_CALL, cseqid);
@@ -2232,7 +2200,6 @@ void SocialGraphServiceClient::send_FollowWithUsername(const int64_t req_id, con
   args.user_usernmae = &user_usernmae;
   args.followee_username = &followee_username;
   args.carrier = &carrier;
-  args.user_id = &user_id;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -2276,13 +2243,13 @@ void SocialGraphServiceClient::recv_FollowWithUsername()
   return;
 }
 
-void SocialGraphServiceClient::UnfollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier, const std::string& user_id)
+void SocialGraphServiceClient::UnfollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier)
 {
-  send_UnfollowWithUsername(req_id, user_usernmae, followee_username, carrier, user_id);
+  send_UnfollowWithUsername(req_id, user_usernmae, followee_username, carrier);
   recv_UnfollowWithUsername();
 }
 
-void SocialGraphServiceClient::send_UnfollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier, const std::string& user_id)
+void SocialGraphServiceClient::send_UnfollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier)
 {
   int32_t cseqid = 0;
   oprot_->writeMessageBegin("UnfollowWithUsername", ::apache::thrift::protocol::T_CALL, cseqid);
@@ -2292,7 +2259,6 @@ void SocialGraphServiceClient::send_UnfollowWithUsername(const int64_t req_id, c
   args.user_usernmae = &user_usernmae;
   args.followee_username = &followee_username;
   args.carrier = &carrier;
-  args.user_id = &user_id;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -2662,7 +2628,7 @@ void SocialGraphServiceProcessor::process_FollowWithUsername(int32_t seqid, ::ap
 
   SocialGraphService_FollowWithUsername_result result;
   try {
-    iface_->FollowWithUsername(args.req_id, args.user_usernmae, args.followee_username, args.carrier, args.user_id);
+    iface_->FollowWithUsername(args.req_id, args.user_usernmae, args.followee_username, args.carrier);
   } catch (ServiceException &se) {
     result.se = std::move(se);
     result.__isset.se = true;
@@ -2718,7 +2684,7 @@ void SocialGraphServiceProcessor::process_UnfollowWithUsername(int32_t seqid, ::
 
   SocialGraphService_UnfollowWithUsername_result result;
   try {
-    iface_->UnfollowWithUsername(args.req_id, args.user_usernmae, args.followee_username, args.carrier, args.user_id);
+    iface_->UnfollowWithUsername(args.req_id, args.user_usernmae, args.followee_username, args.carrier);
   } catch (ServiceException &se) {
     result.se = std::move(se);
     result.__isset.se = true;
@@ -3164,13 +3130,13 @@ void SocialGraphServiceConcurrentClient::recv_Unfollow(const int32_t seqid)
   } // end while(true)
 }
 
-void SocialGraphServiceConcurrentClient::FollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier, const std::string& user_id)
+void SocialGraphServiceConcurrentClient::FollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier)
 {
-  int32_t seqid = send_FollowWithUsername(req_id, user_usernmae, followee_username, carrier, user_id);
+  int32_t seqid = send_FollowWithUsername(req_id, user_usernmae, followee_username, carrier);
   recv_FollowWithUsername(seqid);
 }
 
-int32_t SocialGraphServiceConcurrentClient::send_FollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier, const std::string& user_id)
+int32_t SocialGraphServiceConcurrentClient::send_FollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier)
 {
   int32_t cseqid = this->sync_->generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
@@ -3181,7 +3147,6 @@ int32_t SocialGraphServiceConcurrentClient::send_FollowWithUsername(const int64_
   args.user_usernmae = &user_usernmae;
   args.followee_username = &followee_username;
   args.carrier = &carrier;
-  args.user_id = &user_id;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
@@ -3250,13 +3215,13 @@ void SocialGraphServiceConcurrentClient::recv_FollowWithUsername(const int32_t s
   } // end while(true)
 }
 
-void SocialGraphServiceConcurrentClient::UnfollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier, const std::string& user_id)
+void SocialGraphServiceConcurrentClient::UnfollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier)
 {
-  int32_t seqid = send_UnfollowWithUsername(req_id, user_usernmae, followee_username, carrier, user_id);
+  int32_t seqid = send_UnfollowWithUsername(req_id, user_usernmae, followee_username, carrier);
   recv_UnfollowWithUsername(seqid);
 }
 
-int32_t SocialGraphServiceConcurrentClient::send_UnfollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier, const std::string& user_id)
+int32_t SocialGraphServiceConcurrentClient::send_UnfollowWithUsername(const int64_t req_id, const std::string& user_usernmae, const std::string& followee_username, const std::map<std::string, std::string> & carrier)
 {
   int32_t cseqid = this->sync_->generateSeqId();
   ::apache::thrift::async::TConcurrentSendSentry sentry(this->sync_.get());
@@ -3267,7 +3232,6 @@ int32_t SocialGraphServiceConcurrentClient::send_UnfollowWithUsername(const int6
   args.user_usernmae = &user_usernmae;
   args.followee_username = &followee_username;
   args.carrier = &carrier;
-  args.user_id = &user_id;
   args.write(oprot_);
 
   oprot_->writeMessageEnd();
