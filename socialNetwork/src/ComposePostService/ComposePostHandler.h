@@ -417,11 +417,16 @@ void ComposePostHandler::ComposePost(const int64_t req_id, const std::string &us
 
     post_future.get();
     user_timeline_future.get();
-
-    auto home_timeline_future = std::async(std::launch::async, &ComposePostHandler::_UploadHomeTimelineHelper, this,
-                                           req_id, post.post_id, user_id, timestamp, user_mention_ids, writer_text_map);
-
     span->Finish();
+
+    auto home_timeline_future = std::async(std::launch::async, [this, req_id, post, user_id, timestamp, user_mention_ids]() {
+        auto detached_span = opentracing::Tracer::Global()->StartSpan("upload_home_timeline");
+        
+        this->_UploadHomeTimelineHelper(req_id, post.post_id, user_id, timestamp, user_mention_ids, {});
+        
+        detached_span->Finish();
+    });
+    
 }
 
 } // namespace social_network
