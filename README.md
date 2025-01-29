@@ -83,9 +83,8 @@
 
 ### c. **URL Shortener**
 
-![](./docs/short_url.png)
-
 - **Masalah**: Penyimpanan short URL yang boros ruang karena prefix `http://short-url/` tetap disimpan, serta waktu lookup lambat.
+  ![](./docs/short_url.png)
 - **Solusi (direkomendasikan)**: Hanya menyimpan ID dari short URL (tanpa prefix) pada database
 - **Solusi**: Menggunakan hashed index pada MongoDB untuk URL lookup .
 - **Hasil**: Latensi berkurang dari 1.91ms menjadi 1.82ms.
